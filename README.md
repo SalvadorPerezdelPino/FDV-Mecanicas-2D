@@ -102,6 +102,35 @@ void Update()
 
 > Salto a una plataforma: Esta mecánica se consigue con objetos físicos puesto que hay que implementar un salto, sin embargo, en este caso es necesario detectar la colisión con la plataforma y convertir el sistema de referencia del jugador en hijo de la plataforma. De esta forma conseguiremos que el jugador se mueva sobre/con ella. Del mismo modo una vez que el jugador no esté sobre la plataforma, debemos desvincularla de ella. Esto lo manejaremos cuando se produzca un evento. Desarrollar la versión para plataforma estática y plataforma en movimiento.
 
+```cs
+private void OnCollisionEnter2D(Collision2D collision)
+{
+    if (collision.collider.CompareTag("Floor"))
+    {
+        StopJump();
+    } 
+    else if (collision.collider.CompareTag("StaticPlatform"))
+    {
+        StopJump();
+        transform.SetParent(collision.collider.gameObject.transform);
+    }
+    else if (collision.collider.CompareTag("MovingPlatform"))
+    {
+        StopJump();
+        transform.SetParent(collision.collider.gameObject.transform);
+    }
+}
+
+private void OnCollisionExit2D(Collision2D collision)
+{
+    transform.SetParent(null);
+}
+```
+
+Añadiendo condiciones en la colisión podemos conseguir que diferentes etiquetas tengan diferentes comportamientos. En este caso, tanto la plataforma estática como la movible realizan la misma acción, pero es bueno tenerlas separadas por si en el futuro se desea aplicar lógica específica a cada tipo de plataforma. Como resultado, el personaje salta a las diferentes plataformas y permite saltar desde estas a otras:
+
+![Jump with raycast](./Media/platforms_parent.gif)
+
 > Manejar colisiones con elementos de una capa determinada: Podemos utilizar las capas para que el efecto de las colisiones sólo se tenga en cuenta cuando se pertenece a una determinada capa, o se descarten.
 
 > Plataformas invisibles que se vuelven visibles: Podemos hacer una gestión similar al caso anterior, sólo que en este caso nos interesa manejar los casos en el que se pertenece a la capa de plataformas invisibles. Una vez detectado el caso, se ejecutará la lógica que queramos llevar a cabo, incluido, si así lo consideramos volver la plataforma visible.
