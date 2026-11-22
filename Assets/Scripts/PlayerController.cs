@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -8,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask _floorLayer;
     [SerializeField] private InputActionReference _moveAction;
     [SerializeField] private InputActionReference _jumpAction;
+    [SerializeField] private InputActionReference _shootAction;
     [SerializeField] private Rigidbody2D _rb;
     [SerializeField] private Collider2D _collider;
     [SerializeField] private float _speed = 1f;
@@ -21,8 +23,9 @@ public class PlayerController : MonoBehaviour
     private bool _jumpRequested;
     private bool _isJumping;
     private int _coins;
+    public UnityEvent OnShootEvent;
 
-    private Vector2 _raycastOrigin;
+    //private Vector2 _raycastOrigin;
     void Start()
     {
         _moveAction.action.Enable();
@@ -37,6 +40,12 @@ public class PlayerController : MonoBehaviour
         {
             _jumpRequested = true;
         }
+
+        if (_shootAction.action.WasPressedThisFrame())
+        {
+            OnShootEvent.Invoke();
+        }
+
 
         /*_raycastOrigin = new Vector2(_collider.bounds.center.x, _collider.bounds.min.y);
         RaycastHit2D hit = Physics2D.Raycast(_raycastOrigin, -transform.up, _checkDistance, _floorLayer);
@@ -110,6 +119,11 @@ public class PlayerController : MonoBehaviour
                 _coinText.text = _coins.ToString();
                 Destroy(collision.gameObject);
             }
+            else if (collision.collider.CompareTag("Shoot"))
+            {
+                OnShootEvent.Invoke();
+                Destroy(collision.gameObject);
+            }
         }
 
         if(collision.gameObject.layer == LayerMask.NameToLayer("Invisible"))
@@ -135,14 +149,6 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f); 
         collision.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
-    }
-
-    public void Shoot()
-    {
-        _bullet.SetActive(true);
-        _animator.SetTrigger("Shoot");
-        _bullet.GetComponent<SpriteRenderer>().flipY = _renderer.flipX;
-        StartCoroutine(DisableAfterTime(3.0f));
     }
 
     IEnumerator DisableAfterTime(float time)

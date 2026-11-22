@@ -247,8 +247,48 @@ La cual se llama desde la acción de disparo. La animación ya se había sincron
 
 > Prefab e instanciación. Convierte el proyectil en prefab y elimínalo de la escena. Desde el jugador, instáncialo en un punto de disparo al pulsar el botón, sin hacerlo hijo del jugador. Destrúyelo automáticamente con Destroy(gameObject, tiempo) o al chocar.
 
+En este caso, se ha modificado el método de disparo para generar una nueva instancia de proyectil, colocarlo donde se encuentra el jugador, orientarlo correctamente (el sprite original apunta hacia abajo, pero está rotado en el prefab) y destruirlo después de unos segundos:
+
+```cs
+public void Shoot()
+{
+    GameObject newBullet = Instantiate(_bullet);
+    newBullet.transform.position = gameObject.transform.position;
+    newBullet.GetComponent<SpriteRenderer>().flipY = _renderer.flipX;
+    newBullet.SetActive(true);
+    _animator.SetTrigger("Shoot");
+    Destroy(newBullet, 5.0f);
+}
+```
+
+El resultado muestra correctamente cómo se instancia y se destruye:
+
+![Bullet destroyed](./Media/bullet_destroy.gif)
+
 > Disparo por eventos. Sustituye el botón por al pulsar una tecla o botón Disparo. Además, cuando el jugador colisione con un objeto determinado, debe lanzar un evento. Un componente Lanzador del jugador estará suscrito a ese evento y, al recibirlo, instanciará el proyectil.
 
+Para este apartado, toda la lógica de disparo se ha movido al script Lanzador. Desde el jugador, se ha creado un evento de Unity al que se suscribe este lanzador:
+
+```cs
+if (_shootAction.action.WasPressedThisFrame())
+{
+    OnShootEvent.Invoke();
+}
+```
+
+Y como condición al colisionar con un objeto, en este caso unas uvas, también dispara el evento:
+
+```cs 
+else if (collision.collider.CompareTag("Shoot"))
+{
+    OnShootEvent.Invoke();
+    Destroy(collision.gameObject);
+}
+```
+
+Como resultado, al pulsar el botón del ratón, dispara. Al colisionar con las uvas, también dispara. Desde dos ubicaciones distintas del código, se llama al evento y el Lanzador se encarga de disparar:
+
+![Bullet destroyed](./Media/bullet_event.gif)
 
 
 
