@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,16 +14,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _thrust = 10f;
     [SerializeField] private SpriteRenderer _renderer;
     [SerializeField] private Animator _animator;
+    [SerializeField] private TextMeshProUGUI _coinText;
     //[SerializeField] private float _checkDistance = 0.05f;
     private float _direction;
     private bool _jumpRequested;
     private bool _isJumping;
+    private int _coins;
 
     private Vector2 _raycastOrigin;
     void Start()
     {
         _moveAction.action.Enable();
         _jumpAction.action.Enable();
+        _coinText.text = "0";
     }
 
     void Update()
@@ -51,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
         if (_jumpRequested == true && !_isJumping)
         {
-            _rb.AddForce(transform.up * _thrust, ForceMode2D.Impulse);
+            _rb.AddForce(transform.up * _thrust * (_coins * 0.5f + 1), ForceMode2D.Impulse);
             _isJumping = true;
             _jumpRequested = false;
         }
@@ -98,6 +102,12 @@ public class PlayerController : MonoBehaviour
                 StopJump();
                 transform.SetParent(collision.collider.gameObject.transform);
                 StartCoroutine(BreakPlatform(collision));
+            }
+            else if (collision.collider.CompareTag("Coin"))
+            {
+                _coins++;
+                _coinText.text = _coins.ToString();
+                Destroy(collision.gameObject);
             }
         }
 

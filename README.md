@@ -183,6 +183,23 @@ Como resultado, al subirse a la plataforma que se rompe, podemos saltar rápidam
 
 > Mecánica de recolección: La recolección de objetos se realiza implementando la lógica de la recolección en alguno de los eventos de colisión con ese objeto. En ocasiones se actualizará la UI, en otras se destruirá el objeto, en otras se mejora alguna característica del personaje. En esta tarea se debe implementar una mecánica en la que el jugador recolecte objetos que le supongan alguna recompensa. En concreto, aumentará su puntuación, al llega a un valor de incremento de puntuación, adquirirá más potencia de salto. La puntuación se mostrará continuamente en la pantalla. El objeto recolectado ya no se usará más.
 
+En la interfaz se ha colocado una imagen que representa monedas y un número indicando la cantidad. Se le ha asignado una etiqueta a estas monedas y añadido la condición según su etiqueta:
+
+```cs
+else if (collision.collider.CompareTag("Coin"))
+{
+    _coins++;
+    _coinText.text = _coins.ToString();
+    Destroy(collision.gameObject);
+}
+```
+
+Para incrementar el salto, se ha añadido la cantidad de monedas al impulso utilizado:
+
+```cs
+_rb.AddForce(transform.up * _thrust * (_coins * 0.5f + 1), ForceMode2D.Impulse);
+```
+
 ## Mecánica de disparo 
 > Sprite y visibilidad. Crea un GameObject con un sprite para el proyectil. Al iniciar el juego debe estar desactivado (SetActive(false)). Añade un botón de UI que lo active con SetActive(true). Crea una animación Vuelo para el proyectil que se reproduzca al activarse (estado por defecto del Animator). El personaje tendrá sus propias animaciones, con al menos la transición Idle → Dispara mediante un Trigger.
 
