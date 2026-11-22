@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator _animator;
     [SerializeField] private TextMeshProUGUI _coinText;
     //[SerializeField] private float _checkDistance = 0.05f;
+    [SerializeField] private GameObject _bullet;
     private float _direction;
     private bool _jumpRequested;
     private bool _isJumping;
@@ -135,4 +136,13 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.5f); 
         collision.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
     }
+
+    public void Shoot()
+    {
+        _bullet.SetActive(true);
+        _animator.SetTrigger("Shoot");
+        _bullet.GetComponent<SpriteRenderer>().flipY = _renderer.flipX;
+
+    }
+
 }

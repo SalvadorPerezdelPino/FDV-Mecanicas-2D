@@ -200,10 +200,34 @@ Para incrementar el salto, se ha añadido la cantidad de monedas al impulso util
 _rb.AddForce(transform.up * _thrust * (_coins * 0.5f + 1), ForceMode2D.Impulse);
 ```
 
+![Jump with coins](./Media/coins.gif)
+
+
 ## Mecánica de disparo 
 > Sprite y visibilidad. Crea un GameObject con un sprite para el proyectil. Al iniciar el juego debe estar desactivado (SetActive(false)). Añade un botón de UI que lo active con SetActive(true). Crea una animación Vuelo para el proyectil que se reproduzca al activarse (estado por defecto del Animator). El personaje tendrá sus propias animaciones, con al menos la transición Idle → Dispara mediante un Trigger.
 
+Se ha añadido el botón que llama al método `Shoot()` en el jugador: 
+
+```cs
+public void Shoot()
+{
+    _bullet.SetActive(true);
+    _animator.SetTrigger("Shoot");
+}
+```
+
+El trigger activa una pequeña animación donde el personaje se agacha por haber disparado:
+
+![Jump with coins](./Media/shoot_visible.gif)
+
 > Jerarquía. Coloca el proyectil como hijo del jugador y comprueba que se mueve con él. Haz que el proyectil avance al activarse. Compara: (a) desactivar el SpriteRenderer (SpriteRenderer.enabled = false) del jugador y (b) desactivar el GameObject del jugador con SetActive(false). ¿Qué ocurre con el proyectil en cada caso? ¿Qué pasa si el jugador se mueve mientras el proyectil vuela?
+
+Al colocar el proyectil como hijo, cualquier movimiento que haga el jugador, lo repetirá el proyectil. Cuando el SpriteRenderer se desactiva, únicamente se oculta su aspecto, mientras que al desactivar el GameObject al completo, el proyectil se detiene. Esto ocurre porque, el contenedor de datos que almacena la posición es el Transform en conjunto del script del movimiento. Para el primer caso, ambos siguen activos, mientras que para el segundo, no.
+
+En el siguiente gif se puede observar el anclaje del objeto hijo. Cualquier movimiento del jugador es repetido por el proyectil:
+
+![Jump with coins](./Media/bullet_parent.gif)
+
 
 > Ocultamiento automático. Haz que el proyectil se desactive solo, al cabo de un tiempo (usando una corrutina) o al terminar la animación (usando un Animation Event). Sincroniza el disparo del proyectil con el Trigger Dispara del personaje.
 
