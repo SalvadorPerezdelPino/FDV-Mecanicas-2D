@@ -93,6 +93,12 @@ public class PlayerController : MonoBehaviour
                 transform.SetParent(collision.collider.gameObject.transform);
             }
         }
+
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Invisible"))
+        {
+            StopJump();
+            collision.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        }
     }
 
     private void StopJump()
