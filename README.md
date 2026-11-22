@@ -133,6 +133,10 @@ Añadiendo condiciones en la colisión podemos conseguir que diferentes etiqueta
 
 > Manejar colisiones con elementos de una capa determinada: Podemos utilizar las capas para que el efecto de las colisiones sólo se tenga en cuenta cuando se pertenece a una determinada capa, o se descarten.
 
+En este caso, se ha englobado las comparaciones de colisión con `if(collision.gameObject.layer != LayerMask.NameToLayer("NoCollis"))`. De esta manera, todo lo que tenga la etiqueta NoCollis se omite y no se comprueba su etiqueta para posteriores acciones. En este ejemplo se han colocado dos cajas en el mapa en las que, una vez encima, no se puede volver a saltar. Para poder saltar, es necesario bajarse de las cajas:
+
+![Jump with raycast](./Media/collision_layer.gif)
+
 > Plataformas invisibles que se vuelven visibles: Podemos hacer una gestión similar al caso anterior, sólo que en este caso nos interesa manejar los casos en el que se pertenece a la capa de plataformas invisibles. Una vez detectado el caso, se ejecutará la lógica que queramos llevar a cabo, incluido, si así lo consideramos volver la plataforma visible.
 
 > Plataforma que se cae o rompe: El jugador físico, la plataforma cinemática, cuando el jugador salta a la plataforma establecer rigidbody dinámico a la plataforma, con esto conseguiremos que caiga. Activaremos una corrutina de espera: yield return new WaitForSeconds(0.5f); 

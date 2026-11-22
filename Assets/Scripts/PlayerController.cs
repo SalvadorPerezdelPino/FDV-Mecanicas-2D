@@ -76,19 +76,22 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Floor"))
+        if(collision.gameObject.layer != LayerMask.NameToLayer("NoCollis"))
         {
-            StopJump();
-        } 
-        else if (collision.collider.CompareTag("StaticPlatform"))
-        {
-            StopJump();
-            transform.SetParent(collision.collider.gameObject.transform);
-        }
-        else if (collision.collider.CompareTag("MovingPlatform"))
-        {
-            StopJump();
-            transform.SetParent(collision.collider.gameObject.transform);
+            if (collision.collider.CompareTag("Floor"))
+            {
+                StopJump();
+            } 
+            else if (collision.collider.CompareTag("StaticPlatform"))
+            {
+                StopJump();
+                transform.SetParent(collision.collider.gameObject.transform);
+            }
+            else if (collision.collider.CompareTag("MovingPlatform"))
+            {
+                StopJump();
+                transform.SetParent(collision.collider.gameObject.transform);
+            }
         }
     }
 
