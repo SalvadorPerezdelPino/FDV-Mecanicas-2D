@@ -218,7 +218,7 @@ public void Shoot()
 
 El trigger activa una pequeña animación donde el personaje se agacha por haber disparado:
 
-![Jump with coins](./Media/shoot_visible.gif)
+![Shoot](./Media/shoot_visible.gif)
 
 > Jerarquía. Coloca el proyectil como hijo del jugador y comprueba que se mueve con él. Haz que el proyectil avance al activarse. Compara: (a) desactivar el SpriteRenderer (SpriteRenderer.enabled = false) del jugador y (b) desactivar el GameObject del jugador con SetActive(false). ¿Qué ocurre con el proyectil en cada caso? ¿Qué pasa si el jugador se mueve mientras el proyectil vuela?
 
@@ -226,10 +226,24 @@ Al colocar el proyectil como hijo, cualquier movimiento que haga el jugador, lo 
 
 En el siguiente gif se puede observar el anclaje del objeto hijo. Cualquier movimiento del jugador es repetido por el proyectil:
 
-![Jump with coins](./Media/bullet_parent.gif)
+![Bullet as child](./Media/bullet_parent.gif)
 
 
 > Ocultamiento automático. Haz que el proyectil se desactive solo, al cabo de un tiempo (usando una corrutina) o al terminar la animación (usando un Animation Event). Sincroniza el disparo del proyectil con el Trigger Dispara del personaje.
+
+Se ha empleado una corrutina:
+
+```cs
+IEnumerator DisableAfterTime(float time)
+{
+    yield return new WaitForSeconds(time);
+    _bullet.SetActive(false);
+}
+```
+
+La cual se llama desde la acción de disparo. La animación ya se había sincronizado previamente. Como este personaje no tiene una animación de disparo, se ha utilizado la de agachar, simulando un retroceso por el disparo.
+
+![Bullet with lifetime](./Media/bullet_disable.gif)
 
 > Prefab e instanciación. Convierte el proyectil en prefab y elimínalo de la escena. Desde el jugador, instáncialo en un punto de disparo al pulsar el botón, sin hacerlo hijo del jugador. Destrúyelo automáticamente con Destroy(gameObject, tiempo) o al chocar.
 

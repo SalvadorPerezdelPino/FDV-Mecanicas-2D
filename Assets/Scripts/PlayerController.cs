@@ -142,7 +142,12 @@ public class PlayerController : MonoBehaviour
         _bullet.SetActive(true);
         _animator.SetTrigger("Shoot");
         _bullet.GetComponent<SpriteRenderer>().flipY = _renderer.flipX;
-
+        StartCoroutine(DisableAfterTime(3.0f));
     }
 
+    IEnumerator DisableAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        _bullet.SetActive(false);
+    }
 }
