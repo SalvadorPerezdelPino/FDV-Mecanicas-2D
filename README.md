@@ -3,6 +3,41 @@
 ## Salto
 > Recupera el Rigidbody2D del objeto y aplica una fuerza vertical al objeto cuando se pulse la tecla que hayas configurado para el salto en el Input. Manager
 
+Se ha preparado un pequeño mapa que se irá modificando a lo largo de esta práctica:
+
+![Mundo inicial](./Media/initial_world.png)
+
+Al igual que para el movimiento a lo largo del eje X, se ha utilizado una refencia a la acción saltar del input system. En este caso, en lugar de tomar el valor, se observa cuándo ha sido presionado y se activa un flag que se procesa en el bucle de físicas:
+
+```cs
+void Update()
+{
+    _direction = _moveAction.action.ReadValue<float>();
+    if (_jumpAction.action.WasPressedThisFrame())
+    {
+        _jumpRequested = true;
+    }
+    UpdateSprite();
+}
+
+void FixedUpdate()
+{
+    _rb.linearVelocityX = _direction * _speed;
+
+    if (_jumpRequested == true)
+    {
+        _rb.AddForce(transform.up * _thrust, ForceMode2D.Impulse);
+        _jumpRequested = false;
+    }
+}
+```
+
+Como resultado, el jugador puede saltar una cantidad establecida:
+
+![Jump](./Media/jump.gif)
+
+El principal inconveniente es que cada vez que se pulse el botón, el salto se repite, por lo que puede subir alturas que no estaban pensadas. Esto se corrige en el siguiente apartado.
+
 > En este apartado se debe agregar el código que maneja que sólo se salte si el jugador está en el suelo. Para ello se deben agregar una etiqueta al suelo, de forma que nos permita identificarlo y mediante una variable que actuará de flag, activar o desactivar el salto.
 
 > Opcional: Verificar si está en el suelo utilizando un Raycast. Para ello, lanzar el rayo desde los pies del jugador hasta el suelo, y si hay impacto con un objeto en la capa suelo en un rango muy corto, se considera que el jugador está en el suelo.
