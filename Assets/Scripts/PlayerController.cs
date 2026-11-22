@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -92,6 +93,12 @@ public class PlayerController : MonoBehaviour
                 StopJump();
                 transform.SetParent(collision.collider.gameObject.transform);
             }
+            else if (collision.collider.CompareTag("Breakable"))
+            {
+                StopJump();
+                transform.SetParent(collision.collider.gameObject.transform);
+                StartCoroutine(BreakPlatform(collision));
+            }
         }
 
         if(collision.gameObject.layer == LayerMask.NameToLayer("Invisible"))
@@ -111,5 +118,11 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         transform.SetParent(null);
+    }
+
+    IEnumerator BreakPlatform(Collision2D collision)
+    {
+        yield return new WaitForSeconds(0.5f); 
+        collision.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
     }
 }

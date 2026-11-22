@@ -155,6 +155,32 @@ De esta manera, ajustando el sprite como invisible al comienzo, al colisionar co
 
 > Plataforma que se cae o rompe: El jugador físico, la plataforma cinemática, cuando el jugador salta a la plataforma establecer rigidbody dinámico a la plataforma, con esto conseguiremos que caiga. Activaremos una corrutina de espera: yield return new WaitForSeconds(0.5f); 
 
+Para la caída se ha creado la siguiente corrutina:
+
+```cs
+IEnumerator BreakPlatform(Collision2D collision)
+{
+    yield return new WaitForSeconds(0.5f); 
+    collision.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+}
+```
+
+Y la condición se dispara en las comparaciones de etiquetas:
+
+```cs
+else if (collision.collider.CompareTag("Breakable"))
+{
+    StopJump();
+    transform.SetParent(collision.collider.gameObject.transform);
+    StartCoroutine(BreakPlatform(collision));
+}
+```
+
+Como resultado, al subirse a la plataforma que se rompe, podemos saltar rápidamente antes de caernos junto a la plataforma:
+
+![Jump with raycast](./Media/breakable_platforms.gif)
+
+
 > Mecánica de recolección: La recolección de objetos se realiza implementando la lógica de la recolección en alguno de los eventos de colisión con ese objeto. En ocasiones se actualizará la UI, en otras se destruirá el objeto, en otras se mejora alguna característica del personaje. En esta tarea se debe implementar una mecánica en la que el jugador recolecte objetos que le supongan alguna recompensa. En concreto, aumentará su puntuación, al llega a un valor de incremento de puntuación, adquirirá más potencia de salto. La puntuación se mostrará continuamente en la pantalla. El objeto recolectado ya no se usará más.
 
 ## Mecánica de disparo 
