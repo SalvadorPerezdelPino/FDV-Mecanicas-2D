@@ -454,7 +454,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5714127, y: 5.80999, z: -10}
+  m_LocalPosition: {x: 0.5740688, y: 5.80999, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -677,7 +677,7 @@ Transform:
   m_GameObject: {fileID: 882096824}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5714127, y: 5.80999, z: -10}
+  m_LocalPosition: {x: 0.5740688, y: 5.80999, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -697,9 +697,9 @@ GameObject:
   - component: {fileID: 1586428889}
   - component: {fileID: 1586428891}
   - component: {fileID: 1586428890}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BaseTilemap
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1607,13 +1607,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2020d4210ae22d142994d5c35d8c6a46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  _floorLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   _moveAction: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   _jumpAction: {fileID: -8683694666513537385, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   _rb: {fileID: 1742261205}
+  _collider: {fileID: 1742261206}
   _speed: 6
   _thrust: 6
   _renderer: {fileID: 1742261203}
   _animator: {fileID: 1742261202}
+  _checkDistance: 0.05
 --- !u!1 &2136216750
 GameObject:
   m_ObjectHideFlags: 0

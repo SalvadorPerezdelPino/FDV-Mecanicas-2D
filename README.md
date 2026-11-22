@@ -71,6 +71,33 @@ Al tilemap de fondo se le ha puesto el tag Floor y como resultado, el personaje 
 
 > Opcional: Verificar si está en el suelo utilizando un Raycast. Para ello, lanzar el rayo desde los pies del jugador hasta el suelo, y si hay impacto con un objeto en la capa suelo en un rango muy corto, se considera que el jugador está en el suelo.
 
+Se ha reorganizado un poco el código para que la petición de salto no se pueda activar mientras está saltando, y aplicando un raycast debajo del collider del jugador se obtiene el mismo resultado que anteriormente:
+
+```cs
+void Update()
+{
+    _direction = _moveAction.action.ReadValue<float>();
+    if (_jumpAction.action.WasPressedThisFrame() && !_isJumping)
+    {
+        _jumpRequested = true;
+    }
+
+    _raycastOrigin = new Vector2(_collider.bounds.center.x, _collider.bounds.min.y);
+    RaycastHit2D hit = Physics2D.Raycast(_raycastOrigin, -transform.up, _checkDistance, _floorLayer);
+
+    if (hit.collider != null && hit.collider.CompareTag("Floor"))
+    {
+        _isJumping = false;
+        _rb.linearVelocity = new Vector2(_rb.linearVelocityX, 0);
+    }
+
+    UpdateSprite();
+}
+```
+
+![Jump with raycast](./Media/jump_raycast.gif)
+
+
 ## Mécánicas relacionadas con plataformas
 
 > Salto a una plataforma: Esta mecánica se consigue con objetos físicos puesto que hay que implementar un salto, sin embargo, en este caso es necesario detectar la colisión con la plataforma y convertir el sistema de referencia del jugador en hijo de la plataforma. De esta forma conseguiremos que el jugador se mueva sobre/con ella. Del mismo modo una vez que el jugador no esté sobre la plataforma, debemos desvincularla de ella. Esto lo manejaremos cuando se produzca un evento. Desarrollar la versión para plataforma estática y plataforma en movimiento.
