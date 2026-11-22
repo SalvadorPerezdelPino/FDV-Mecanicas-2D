@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator _animator;
     private float _direction;
     private bool _jumpRequested;
+    private bool _isJumping;
 
     void Start()
     {
@@ -33,10 +34,10 @@ public class PlayerController : MonoBehaviour
     {
         _rb.linearVelocityX = _direction * _speed;
 
-        if (_jumpRequested == true)
+        if (_jumpRequested == true && !_isJumping)
         {
             _rb.AddForce(transform.up * _thrust, ForceMode2D.Impulse);
-            _jumpRequested = false;
+            _isJumping = true;
         }
     }
 
@@ -55,6 +56,16 @@ public class PlayerController : MonoBehaviour
         else
         {
             _animator.SetBool("isRunning", false);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Floor"))
+        {
+            _isJumping = false;
+            _jumpRequested = false;
+            _rb.linearVelocity = new Vector2(_rb.linearVelocityX, 0);
         }
     }
 }

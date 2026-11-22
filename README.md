@@ -40,6 +40,35 @@ El principal inconveniente es que cada vez que se pulse el botón, el salto se r
 
 > En este apartado se debe agregar el código que maneja que sólo se salte si el jugador está en el suelo. Para ello se deben agregar una etiqueta al suelo, de forma que nos permita identificarlo y mediante una variable que actuará de flag, activar o desactivar el salto.
 
+Para ello, se ha añadido otra variable que indique si el personaje está satando en ese momento y se ha movido la condición de finalización a la detección del suelo:
+
+```cs
+void FixedUpdate()
+{
+    _rb.linearVelocityX = _direction * _speed;
+
+    if (_jumpRequested == true && !_isJumping)
+    {
+        _rb.AddForce(transform.up * _thrust, ForceMode2D.Impulse);
+        _isJumping = true;
+    }
+}
+
+private void OnCollisionEnter2D(Collision2D collision)
+{
+    if (collision.collider.CompareTag("Floor"))
+    {
+        _isJumping = false;
+        _jumpRequested = false;
+        _rb.linearVelocity = new Vector2(_rb.linearVelocityX, 0);
+    }
+}
+```
+
+Al tilemap de fondo se le ha puesto el tag Floor y como resultado, el personaje solo puede saltar cuando toca el suelo:
+
+![Jump once](./Media/jump_once.gif)
+
 > Opcional: Verificar si está en el suelo utilizando un Raycast. Para ello, lanzar el rayo desde los pies del jugador hasta el suelo, y si hay impacto con un objeto en la capa suelo en un rango muy corto, se considera que el jugador está en el suelo.
 
 ## Mécánicas relacionadas con plataformas
